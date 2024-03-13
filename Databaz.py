@@ -1,23 +1,25 @@
-class Databaze():
-    user = ["root", "user_dva", "nothing"]
-    password = ["root777", "users", "ayanami"]
-    type = ["admin", "VIP", "classic"]
+class Databaze:
+    log_and_pass = {
+        'root': 'root777',
+        'user': 'user_dva',
+        'nothing': 'nothing_pass'
+    }
     try_user: str
     try_pass: str
 
-    def __init__(self, _pass: str, _user: str):
-        self.try_pass=_pass
-        self.try_user=_user
+    def __init__(self, tryp: str, tryu: str):
+        self.try_pass = tryp
+        self.try_user = tryu
 
 
-class Exeption():
-    def throw_exeption(self, text: str) -> str:
+class Exeption:
+    def throw_exeption(self, baza: Databaze) -> Databaze:
         raise NotImplementedError()
 
 
 class NoExeption(Exeption):
-    def throw_exeption(self, text: str) -> str:
-        return text
+    def throw_exeption(self, baza: Databaze) -> Databaze:
+        return baza
 
 
 class ExeptionChain(Exeption):
@@ -29,38 +31,27 @@ class ExeptionChain(Exeption):
     def set_next(self, next_exe: Exeption):
         self.next_exeption = next_exe
 
-    def throw_exeption(self, text: str) -> str:
-        t = self.do_exeption_conc(text)
-        return self.next_exeption.throw_exeption(t)
+    def throw_exeption(self, baza: Databaze):
+        test = self.do_exeption_conc(baza)
+        return self.next_exeption.throw_exeption(test)
 
-    def do_exeption_conc(self, text: str) -> str:
+    def do_exeption_conc(self, baza: Databaze) -> Databaze:
         raise NotImplementedError()
 
 
 class AvtorizationExeption(ExeptionChain):
-    def do_exeption_conc(self, text: str) -> str:
-
-        return "avexeprtion"
+    def do_exeption_conc(self, baza: Databaze):
+        return baza
 
 
 class AuthenticateExeption(ExeptionChain):
-    def do_exeption_conc(self, text: str) -> str:
-        print("ai")
-        return "auexeption"
+    def do_exeption_conc(self, baza: Databaze):
+        if baza.log_and_pass.get(baza.try_user) == None:
+            print("AUTHENTICATE FAILED")
+            return 0
+        return baza
 
 
 class InputExeption(ExeptionChain):
-
-    def do_exeption_conc(self, text: str) -> str:
-        print("int")
-        return "inexeption"
-
-#
-#av = AvtorizationExeption()
-##au = AuthenticateExeption()
-#ie = InputExeption()
-
-#av.set_next(au)
-#au.set_next(ie)
-
-#print(av.throw_exeption('test'))
+    def do_exeption_conc(self, baza: Databaze):
+        return baza
