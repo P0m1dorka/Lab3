@@ -1,41 +1,47 @@
 class Exeption():
-    def throw_exeption(self):
-        print("somthing exeption")
-
+    def throw_exeption(self, text:str) -> str:
+        raise NotImplementedError()
 class NoExeption(Exeption):
-    def throw_exeption(self):
-        print("no exeption")
+    def throw_exeption(self, text:str) -> str:
+        return text
 
-class NextExeption(Exeption):
+class ExeptionChain(Exeption):
     next_exeption: Exeption()
 
     def __init__(self):
-        self.next_exeption = NoExeption()
+        self.next_exeption=NoExeption()
 
-    def set_net_exeption(self, next_exe: Exeption):
-        self.next_exeption = next_exe
+    def set_next(self, next_exe:Exeption):
+        self.next_exeption=next_exe
 
-    def throw_exeption(self):
-        t = self.do_throw_exeption()
-        return self.next_exeption.throw_exeption()
-    def do_throw_exeption(self):
+    def throw_exeption(self, text:str) -> str:
+        t = self.do_exeption_conc(text)
+        return self.next_exeption.throw_exeption(t)
+
+    def do_exeption_conc(self, text:str) -> str:
         raise NotImplementedError()
-class AuthExepe(NextExeption):
-    def throw_exeption(self):
-        print("Authexepe")
-class AvtorExepe(NextExeption):
-    def throw_exeption(self):
-        print("Avtexepe")
-class InpExepe(NextExeption):
-    def throw_exeption(self):
-        print("Inpexepe")
 
-ex_au = AuthExepe()
-ex_av=AvtorExepe()
-ex_in=InpExepe()
+class AvExeption(ExeptionChain):
+    def do_exeption_conc(self, text:str) -> str:
+        print("av")
+        return "avexeprtion"
 
-ex_in.set_net_exeption(ex_au)
-ex_au.set_net_exeption(ex_av)
+class AuExeption(ExeptionChain):
+    def do_exeption_conc(self, text:str) -> str:
+        print("ai")
+        return "auexeption"
 
-print(ex_in.throw_exeption())
+class InExeption(ExeptionChain):
 
+    def do_exeption_conc(self, text:str) -> str:
+        print("int")
+        return "inexeption"
+
+av = AvExeption()
+au = AuExeption()
+ie = InExeption()
+
+av.set_next(au)
+au.set_next(ie)
+
+print(av.throw_exeption('test'))
