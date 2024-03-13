@@ -7,7 +7,7 @@ from Databaz import Databaze, AuthenticateExeption, AvtorizationExeption, InputE
 
 
 
-baza = Databaze('5','5')
+baza = Databaze('root777','root')
 av = AvtorizationExeption()
 au = AuthenticateExeption()
 ie = InputExeption()
