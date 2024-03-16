@@ -9,6 +9,8 @@ class Databaze:
     }
     commands_root = ['DROP', 'FORCE', 'CHECK', 'TEST']
     commands_user = ['CHECK', 'TEST']
+    access_for_root = ['USERS', 'CODE', 'PRODUCTS', 'DATA']
+    access_for_user = ['CODE', 'PRODUCTS']
     try_user: str
     try_pass: str
 
@@ -46,18 +48,20 @@ class ExeptionChain(Exeption):
 
 class AvtorizationExeption(ExeptionChain):
     def do_exeption_conc(self, baza: Databaze):
+        user_sec = input("Input section name")
+
         return baza
 
 
 class AuthenticateExeption(ExeptionChain):
     def do_exeption_conc(self, baza: Databaze):
         if baza.log_and_pass.get(baza.try_user) is None:
-            print("AUTHENTICATE FAILED")
+            print("AUTHENTICATE FAILED: INCORRECT LOGIN")
             return sys.exit()
         else:
             password = baza.log_and_pass.get(baza.try_user)
             if password != baza.try_pass:
-                print("WRONG PASSWORD")
+                print("AUTHENTICATE FAILED: INCORRECT PASSWORD")
                 return sys.exit()
         return baza
 
